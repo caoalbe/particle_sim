@@ -2,19 +2,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class Simulator {
-    public:
-        std::vector<Particle> particle_list;
-
-        Simulator(std::vector<Particle> particles) 
-            : particle_list(particles) {}
-
-            
-        sf::Vector2f compute_field(sf::Vector2f position) {}
-
-        void update(float dt) {}
-}
-
 class Particle {
     public:
         sf::Vector2f velocity;
@@ -25,12 +12,29 @@ class Particle {
             sprite.setPosition(position);
         }
 
-        void update(float dt) {
+        void update(float dt, sf::Vector2f accel) {
             // Update position from velocity
             sprite.move(velocity * dt);
 
             // Update velocity from acceleration
-            velocity.y = velocity.y + 0.05f;
+            velocity = velocity + accel;
+        }
+};
+
+class Simulator {
+    public:
+        std::vector<Particle> particle_list;
+        // std::vector<sf::Vector2f> field_list;
+
+        Simulator(std::vector<Particle> particles) 
+            : particle_list(particles) {}
+
+        // sf::Vector2f compute_field(sf::Vector2f position) {}
+
+        void update(float dt) {
+            for (Particle& particle : particle_list) {
+                particle.update(dt, sf::Vector2f(0.0f, 0.20f));
+            }
         }
 };
 
@@ -39,10 +43,12 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "particle sim");
     sf::Clock clock;
 
-    std::vector<Particle> particle_list = { 
+    // Setup conditions of simulator
+    std::vector<Particle> p_list = { 
         Particle(10.0f, sf::Vector2f(50.0f, 500.0f), sf::Vector2f(500.0f, -50.0f)),
         Particle(5.0f, sf::Vector2f(200.0f, 25.0f), sf::Vector2f(-200.0f, 100.0f)) 
     };
+    Simulator sim = Simulator(p_list);
 
     // Start the simulation loop
     while (window.isOpen())
@@ -59,13 +65,11 @@ int main() {
         float dt = clock.restart().asSeconds();
 
         // Physics engine
-        for (Particle& particle : particle_list) {
-            particle.update(dt);
-        }
+        sim.update(dt);
 
         // Draw graphics
         window.clear();
-        for (const Particle& particle : particle_list) {
+        for (const Particle& particle : sim.particle_list) {
             window.draw(particle.sprite);
         }
         window.display();
