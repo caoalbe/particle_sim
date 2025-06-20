@@ -17,7 +17,7 @@ class Particle {
             sprite.move(velocity * dt);
 
             // Update velocity from acceleration
-            velocity = velocity + accel;
+            velocity = velocity + accel*dt;
         }
 };
 
@@ -33,7 +33,7 @@ class Simulator {
 
         void update(float dt) {
             for (Particle& particle : particle_list) {
-                particle.update(dt, sf::Vector2f(0.0f, 0.20f));
+                particle.update(dt, sf::Vector2f(0.0f, 30.0f));
             }
         }
 };
