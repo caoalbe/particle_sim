@@ -2,20 +2,29 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+const float k_e = 89.875517862000; // N cm^2 / µC^2
+
 class Particle {
     public:
+        int id;
+        float charge;
+        sf::Vector2f position;
         sf::Vector2f velocity;
         sf::CircleShape sprite;
 
-        Particle(float radius, sf::Vector2f position, sf::Vector2f velocity) 
-            : sprite(radius), velocity(velocity) {
+        Particle(int id, float radius, float charge, sf::Vector2f position, sf::Vector2f velocity) 
+        // identifier, radius, charge (microcoloumb), position (cm), velocity (cm/s)
+            : id(id), sprite(radius), charge(charge), position(position), velocity(velocity) {
             sprite.setPosition(position);
         }
 
-        void update(float dt, sf::Vector2f accel) {
+        void update_position(float dt) {
             // Update position from velocity
-            sprite.move(velocity * dt);
+            position = position + velocity * dt;
+            sprite.setPosition(position);            
+        }
 
+        void update_velocity(float dt, sf::Vector2f accel) {
             // Update velocity from acceleration
             velocity = velocity + accel*dt;
         }
@@ -24,16 +33,40 @@ class Particle {
 class Simulator {
     public:
         std::vector<Particle> particle_list;
-        // std::vector<sf::Vector2f> field_list;
 
         Simulator(std::vector<Particle> particles) 
             : particle_list(particles) {}
 
-        // sf::Vector2f compute_field(sf::Vector2f position) {}
+        sf::Vector2f compute_field(sf::Vector2f target) {
+            sf::Vector2f field = sf::Vector2f(0.0f, 0.0f);
+            sf::Vector2f distance_vector;
+            sf::Vector2f distance_normalized;
+
+            float distance_squared;
+            float distance;
+            float force;
+            for (Particle& particle : particle_list) {
+                if (particle.position != target) {
+                    distance_vector = target - particle.position;
+                    distance_squared = distance_vector.x * distance_vector.x + distance_vector.y * distance_vector.y;
+                    distance = std::sqrt(distance_squared);
+                    distance_normalized = distance_vector / distance; 
+
+                    force = k_e * particle.charge / distance_squared;
+                    field = field + force*distance_normalized;
+                }
+            }
+            return field; // newtons per microcoloumb
+        }
 
         void update(float dt) {
             for (Particle& particle : particle_list) {
-                particle.update(dt, sf::Vector2f(0.0f, 30.0f));
+                // particle.charge * compute_field is Newtons
+                particle.update_velocity(dt, particle.charge * compute_field(particle.position));
+            }
+
+            for (Particle& particle : particle_list) {
+                particle.update_position(dt);
             }
         }
 };
@@ -45,8 +78,10 @@ int main() {
 
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
-        Particle(10.0f, sf::Vector2f(50.0f, 500.0f), sf::Vector2f(500.0f, -50.0f)),
-        Particle(5.0f, sf::Vector2f(200.0f, 25.0f), sf::Vector2f(-200.0f, 100.0f)) 
+        // identifierm, radius, charge (microcoloumb), position (cm), velocity (cm/s)
+        Particle(1, 5.0f, 50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
+        Particle(2, 5.0f, -30.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
+        Particle(3, 5.0f, -20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 0.0f))
     };
     Simulator sim = Simulator(p_list);
 
