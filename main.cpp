@@ -50,12 +50,38 @@ class Particle {
         }
 };
 
+class FieldLine {
+    public:
+        sf::Vector2f position;
+        sf::Vertex line_data[2];
+
+        FieldLine(sf::Vector2f position) : position(position) {
+            line_data[0].position = position;
+            line_data[0].color = sf::Color::Yellow;
+            line_data[1].position = position;
+            line_data[1].color = sf::Color::Yellow;
+        }
+
+        void setElectricField(sf::Vector2f electricField) {
+            float length_squared = electricField.x * electricField.x + electricField.y * electricField.y;
+            if (length_squared > MAX_LENGTH_SQUARED) {
+                electricField = electricField / std::sqrt(length_squared) * MAX_LENGTH;
+            }
+            line_data[1].position = position + 10.0f * electricField;
+        }
+
+    private:
+        const float MAX_LENGTH = 10.0f; // Max length of field line
+        const float MAX_LENGTH_SQUARED = MAX_LENGTH * MAX_LENGTH;
+};
+
 class Simulator {
     public:
         std::vector<Particle> particle_list;
+        std::vector<FieldLine> field_list;
 
-        Simulator(std::vector<Particle> particles) 
-            : particle_list(particles) {}
+        Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines) 
+            : particle_list(particles), field_list(field_lines) {}
 
         sf::Vector2f compute_field(sf::Vector2f target) {
             sf::Vector2f field = sf::Vector2f(0.0f, 0.0f);
@@ -87,6 +113,10 @@ class Simulator {
             for (Particle& particle : particle_list) {
                 particle.update_position(dt);
             }
+
+            for (FieldLine& field : field_list) {
+                field.setElectricField(compute_field(field.position));
+            }
         }
 };
 
@@ -99,11 +129,18 @@ int main() {
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
         // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(1, 5.0f, 50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
-        Particle(2, 1.0f, -30.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
-        Particle(3, 1.0f, -20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 0.0f))
+        Particle(1, 5.0f, -50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
+        Particle(2, 1.0f, 30.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
+        Particle(3, 1.0f, 20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 0.0f))
     };
-    Simulator sim = Simulator(p_list);
+    std::vector<FieldLine> f_list = {};
+    for (int x = 50; x < 800; x+=25) {
+        for (int y = 50; y < 600; y+=25) {
+            f_list.push_back(FieldLine(sf::Vector2f(x, y)));
+        }
+    }
+
+    Simulator sim = Simulator(p_list, f_list);
 
     // Start the simulation loop
     while (window.isOpen())
@@ -123,6 +160,10 @@ int main() {
 
         // Draw graphics
         window.clear();
+        for (const FieldLine& field : sim.field_list) {
+            window.draw(field.line_data, 2, sf::PrimitiveType::Lines);
+        }
+
         for (const Particle& particle : sim.particle_list) {
             window.draw(particle.sprite);
         }
