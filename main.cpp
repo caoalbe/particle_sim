@@ -16,7 +16,7 @@ class Particle {
         sf::CircleShape sprite;
 
         Particle(int id, float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
-            : id(id), charge(charge), position(position), velocity(velocity) {
+            : id(id), mass(mass), charge(charge), position(position), velocity(velocity) {
             
             radius = std::sqrt(100 * mass/pi);
             sprite = sf::CircleShape(radius);
@@ -40,9 +40,9 @@ class Particle {
             sprite.move(sf::Vector2f(-radius, -radius));  
         }
 
-        void update_velocity(float dt, sf::Vector2f accel) {
-            // Update velocity from acceleration
-            velocity = velocity + accel*dt;
+        void update_velocity(float dt, sf::Vector2f force) {
+            // Update velocity from force (Newtons)
+            velocity = velocity + force*dt/mass;
         }
 };
 
@@ -95,7 +95,7 @@ int main() {
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
         // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(1, 1.0f, 50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
+        Particle(1, 5.0f, 50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
         Particle(2, 1.0f, -30.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
         Particle(3, 1.0f, -20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 0.0f))
     };
@@ -112,7 +112,7 @@ int main() {
         }
 
         // Get elapsed time
-        float dt = clock.restart().asSeconds(); // NOTE: Varying dt yields varying sims
+        float dt = clock.restart().asSeconds();
 
         // Physics engine
         sim.update(dt);
