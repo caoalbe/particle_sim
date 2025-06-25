@@ -88,7 +88,8 @@ class Simulator {
 
 int main() {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "particle sim");
+    sf::RenderWindow window = sf::RenderWindow(sf::VideoMode({800, 600}), "particle sim");
+    window.setFramerateLimit(120);
     sf::Clock clock;
 
     // Setup conditions of simulator
