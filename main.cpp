@@ -18,6 +18,10 @@ class Particle {
         Particle(int id, float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
             : id(id), mass(mass), charge(charge), position(position), velocity(velocity) {
             
+            if (mass == 0) {
+                // TODO: Manage this error
+            }
+
             radius = std::sqrt(100 * mass/pi);
             sprite = sf::CircleShape(radius);
 
