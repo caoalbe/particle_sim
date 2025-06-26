@@ -1,0 +1,74 @@
+#include <vector>
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include "Particle.hpp"
+#include "FieldLine.hpp"
+#include "Simulator.hpp"
+
+
+int main() {
+    // Create the main window
+    sf::RenderWindow window = sf::RenderWindow(sf::VideoMode({800, 600}), "particle sim");
+    window.setFramerateLimit(120);
+    sf::Clock clock;
+
+    // Setup conditions of simulator
+    // std::vector<Particle> p_list = { 
+    //     // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
+    //     Particle(1, 2.0f, -50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
+    //     Particle(2, 3.0f, 30.0f, sf::Vector2f(550.0f, 300.0f), sf::Vector2f(0.0f, -5.0f)),
+    //     Particle(3, 1.0f, 20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
+    // };
+    // std::vector<Particle> p_list = { 
+    //     // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
+    //     Particle(1, 100.0f, -500.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
+    //     Particle(2, 0.75f, 1.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, -15.0f))
+    // };
+    std::vector<Particle> p_list = { 
+        // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
+        Particle(1, 2.0f, 50.0f, sf::Vector2f(200.0f,400.0f), sf::Vector2f(10.0f, -5.0f)),
+        Particle(2, 1.0f, -50.0f, sf::Vector2f(500.0f,300.0f), sf::Vector2f(-20.0f, 1.0f)),
+        Particle(3, 0.4f, 35.0f, sf::Vector2f(100.0f,500.0f), sf::Vector2f(30.0f, 9.0f)),
+        Particle(4, 1.3f, 40.0f, sf::Vector2f(700.0f,500.0f), sf::Vector2f(-5.0f, -4.50f)),
+        Particle(5, 1.5f, -35.0f, sf::Vector2f(700.0f,100.0f), sf::Vector2f(10.0f, 2.50f)),
+    };
+    std::vector<FieldLine> f_list = {};
+    for (int x = 0; x < 800; x+=10) {
+        for (int y = 0; y < 600; y+=10) {
+            f_list.push_back(FieldLine(sf::Vector2f(x, y)));
+        }
+    }
+
+    Simulator sim = Simulator(p_list, f_list);
+
+    // Start the simulation loop
+    while (window.isOpen())
+    {
+        // Process events
+        while (const std::optional event = window.pollEvent())
+        {
+            // Close window: exit
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        // Get elapsed time
+        float dt = clock.restart().asSeconds();
+
+        // Physics engine
+        sim.update(dt);
+
+        // Draw graphics
+        window.clear();
+        for (const FieldLine& field : sim.field_list) {
+            window.draw(field.line_data, 2, sf::PrimitiveType::Lines);
+        }
+
+        for (const Particle& particle : sim.particle_list) {
+            window.draw(particle.sprite);
+        }
+        window.display();
+
+    }
+
+    return 0;
+}
