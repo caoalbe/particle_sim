@@ -23,7 +23,7 @@ class Particle {
             }
 
             // Determine radius with sigmoid
-            radius = 3/(1 + std::exp(-10*mass+5))+ 5.0f;
+            radius = 3/(1 + std::exp(-10*mass+5))+ 3.5f;
             sprite = sf::CircleShape(radius);
 
             sf::Color spriteColor;
@@ -50,10 +50,10 @@ class Particle {
             velocity = velocity + force*dt/mass;
 
             // Bounce off walls
-            if (position.x < 0 || position.x > 800) {
+            if (position.x < radius || position.x > 800 - radius) {
                 velocity.x *= -0.95;
             }
-            if (position.y < 0 || position.y > 600) {
+            if (position.y < radius || position.y > 600 - radius) {
                 velocity.y *= -0.95;
             }
         }
