@@ -1,9 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "FieldLine.hpp"
 
-sf::Vector2f position;
-sf::Vertex line_data[2];
-
 FieldLine::FieldLine(sf::Vector2f position) : position(position) {
     line_data[0].position = position;
     line_data[0].color = sf::Color::Yellow;
