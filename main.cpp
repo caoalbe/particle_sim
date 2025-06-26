@@ -22,7 +22,8 @@ class Particle {
                 // TODO: Manage this error
             }
 
-            radius = std::sqrt(100 * mass/pi);
+            // Determine radius with sigmoid
+            radius = 3/(1 + std::exp(-10*mass+5))+ 5.0f;
             sprite = sf::CircleShape(radius);
 
             sf::Color spriteColor;
@@ -67,7 +68,7 @@ class FieldLine {
             if (length_squared > MAX_LENGTH_SQUARED) {
                 electricField = electricField / std::sqrt(length_squared) * MAX_LENGTH;
             }
-            line_data[1].position = position + 10.0f * electricField;
+            line_data[1].position = position + 3.0f * electricField;
         }
 
     private:
@@ -129,13 +130,19 @@ int main() {
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
         // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(1, 5.0f, -50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
-        Particle(2, 1.0f, 30.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)),
-        Particle(3, 1.0f, 20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 0.0f))
+        Particle(1, 2.0f, -50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
+        Particle(2, 3.0f, 30.0f, sf::Vector2f(550.0f, 300.0f), sf::Vector2f(0.0f, -10.0f)),
+        Particle(3, 1.0f, 20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
+        Particle(3, 1.0f, -10.0f, sf::Vector2f(250.0f, 150.0f), sf::Vector2f(-9.0f, 0.0f))
     };
+    // std::vector<Particle> p_list = { 
+    //     // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
+    //     Particle(1, 100.0f, -500.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
+    //     Particle(2, 0.75f, 1.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, -15.0f))
+    // };
     std::vector<FieldLine> f_list = {};
-    for (int x = 50; x < 800; x+=25) {
-        for (int y = 50; y < 600; y+=25) {
+    for (int x = 15; x < 800; x+=10) {
+        for (int y = 15; y < 600; y+=10) {
             f_list.push_back(FieldLine(sf::Vector2f(x, y)));
         }
     }
