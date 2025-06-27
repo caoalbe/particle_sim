@@ -3,6 +3,7 @@
 
 const float k_e = 89.875517862000; // N cm^2 / µC^2
 
+// TODO: Decouple sprites from Particle and FieldLine objects
 Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines) 
     : particle_list(particles), field_list(field_lines) {}
 

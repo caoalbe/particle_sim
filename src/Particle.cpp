@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "Particle.hpp"
 
-const float RADIUS_LOWER_BOUND = 2.0f;
-const float RADIUS_UPPER_BOUND = 7.0f;
+const float RADIUS_LOWER_BOUND = 3.0f;
+const float RADIUS_UPPER_BOUND = 10.0f;
 const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
 
-Particle::Particle(int id, float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
-    : id(id), mass(mass), charge(charge), position(position), velocity(velocity) {
+Particle::Particle(int id, bool respondsToField,float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
+    : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
     
     if (mass == 0) {
         // TODO: Manage this error
@@ -44,7 +44,9 @@ void Particle::update_position(float dt) {
 
 void Particle::update_velocity(float dt, sf::Vector2f force) {
     // Update velocity from force (Newtons)
-    velocity = velocity + force*dt/mass;
+    if (respondsToField) {
+        velocity = velocity + force*dt/mass;
+    }
 
     // Bounce off walls
     if (position.x <= radius || position.x >= 800 - radius) { velocity.x *= -0.85; velocity.y *= 0.85; }
