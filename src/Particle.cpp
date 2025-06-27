@@ -45,7 +45,7 @@ void Particle::update_position(float dt) {
 void Particle::update_velocity(float dt, sf::Vector2f force) {
     // Update velocity from force (Newtons)
     if (respondsToField) {
-        velocity = velocity + force*dt/mass;
+        velocity = velocity + force*dt/mass*100.0f;
     }
 
     // Bounce off walls

@@ -31,8 +31,8 @@ int main() {
         // Particle(5, 1.5f, -35.0f, sf::Vector2f(700.0f,100.0f), sf::Vector2f(10.0f, 2.50f)),
 
         // identifier, respondsToField, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(99, false, 100.0f, 100.0f, sf::Vector2f(200.0f, 35.0f), sf::Vector2f(10.0f, 10.0f)), // EARTH
-        Particle(1, true, 0.5f, -10.0f, sf::Vector2f(125.0f, 35.0f), sf::Vector2f(10.0f, 58.9559033858)), // MOON
+        Particle(99, false, 100.0f, 100.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)), // EARTH
+        Particle(1, true, 0.5f, -10.0f, sf::Vector2f(400.0f - 75.0f, 300.0f), sf::Vector2f(0.0f, 489.559033858f)), // MOON
     };
 
     std::vector<FieldLine> f_list;
