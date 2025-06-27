@@ -14,10 +14,10 @@ int main() {
 
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
-        // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        // Particle(1, 2.0f, -50.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
-        // Particle(2, 3.0f, 30.0f, sf::Vector2f(550.0f, 275.0f), sf::Vector2f(0.0f, -5.0f)),
-        // Particle(3, 1.0f, 20.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
+        // mass, charge (microcoloumb), position (cm), velocity (cm/s)
+        // Particle(2.0f, -5.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
+        // Particle(3.0f, 3.0f, sf::Vector2f(550.0f, 275.0f), sf::Vector2f(0.0f, -5.0f)),
+        // Particle(1.0f, 2.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
 
         // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
         // Particle(1, 100.0f, -500.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
@@ -30,15 +30,15 @@ int main() {
         // Particle(4, 1.3f, 40.0f, sf::Vector2f(700.0f,500.0f), sf::Vector2f(-5.0f, -4.50f)),
         // Particle(5, 1.5f, -35.0f, sf::Vector2f(700.0f,100.0f), sf::Vector2f(10.0f, 2.50f)),
 
-        // identifier, respondsToField, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(99, false, 100.0f, 100.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(0.0f, 0.0f)), // EARTH
-        Particle(1, true, 0.5f, -10.0f, sf::Vector2f(400.0f - 75.0f, 300.0f), sf::Vector2f(0.0f, 489.559033858f)), // MOON
+        // mass, charge (microcoloumb), position (cm), velocity (cm/s)
+        Particle(100.0f, 100.0f, sf::Vector2f(100.0f, 300.0f), sf::Vector2f(45.0f, 0.0f), false), // EARTH
+        Particle(0.5f, -10.0f, sf::Vector2f(100.0f - 75.0f, 300.0f), sf::Vector2f(45.0f, 489.559033858f)), // MOON
     };
 
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
-    for (int x = 5; x < 800; x+=10) {
-        for (int y = 5; y < 600; y+=10) {
+    for (int x = 5; x < 800; x+=15) {
+        for (int y = 5; y < 600; y+=15) {
             f_list.push_back(FieldLine(sf::Vector2f(x, y)));
         }
     }

@@ -5,7 +5,7 @@ const float RADIUS_LOWER_BOUND = 3.0f;
 const float RADIUS_UPPER_BOUND = 10.0f;
 const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
 
-Particle::Particle(int id, bool respondsToField,float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
+Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField, int id) 
     : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
     
     if (mass == 0) {
@@ -27,6 +27,12 @@ Particle::Particle(int id, bool respondsToField,float mass, float charge, sf::Ve
     sprite.setFillColor(spriteColor);
     sprite.setPosition(position);
 }
+
+Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField) 
+    : Particle::Particle(mass, charge, position, velocity, respondsToField, -1) {}
+
+Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
+    : Particle::Particle(mass, charge, position, velocity, true, -1) {}
 
 void Particle::update_position(float dt) {
     // Update position from velocity
@@ -50,5 +56,5 @@ void Particle::update_velocity(float dt, sf::Vector2f force) {
 
     // Bounce off walls
     if (position.x <= radius || position.x >= 800 - radius) { velocity.x *= -0.85; velocity.y *= 0.85; }
-    if (position.y <= radius || position.y >= 600 - radius) { velocity.y *= -0.85; velocity.x *= 0.85; }
+    if (position.y <= radius || position.y >= 600 - radius) { velocity.x *= 0.85; velocity.y *= -0.85; }
 }
