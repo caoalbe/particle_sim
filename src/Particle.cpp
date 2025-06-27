@@ -1,6 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "Particle.hpp"
 
+const float RADIUS_LOWER_BOUND = 2.0f;
+const float RADIUS_UPPER_BOUND = 7.0f;
+const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
+
 Particle::Particle(int id, float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
     : id(id), mass(mass), charge(charge), position(position), velocity(velocity) {
     
@@ -9,7 +13,7 @@ Particle::Particle(int id, float mass, float charge, sf::Vector2f position, sf::
     }
 
     // Determine radius with sigmoid
-    radius = 3/(1 + std::exp(-10*mass+5))+ 3.5f;
+    radius = RADIUS_LOWER_BOUND + RADIUS_RANGE/(1 + std::exp(-10*mass+5));
     sprite = sf::CircleShape(radius);
 
     sf::Color spriteColor;
@@ -27,7 +31,14 @@ Particle::Particle(int id, float mass, float charge, sf::Vector2f position, sf::
 void Particle::update_position(float dt) {
     // Update position from velocity
     position = position + velocity * dt;
-    sprite.setPosition(position );
+
+    // Prevent clipping
+    if (position.x < radius) { position.x = radius; }
+    if (position.x > 800 - radius) { position.x = 800 - radius; } 
+    if (position.y < radius) { position.y = radius; }
+    if (position.y > 600 - radius) { position.y = 600 - radius; }
+
+    sprite.setPosition(position);
     sprite.move(sf::Vector2f(-radius, -radius));  
 }
 
@@ -36,10 +47,6 @@ void Particle::update_velocity(float dt, sf::Vector2f force) {
     velocity = velocity + force*dt/mass;
 
     // Bounce off walls
-    if (position.x < radius || position.x > 800 - radius) {
-        velocity.x *= -0.95;
-    }
-    if (position.y < radius || position.y > 600 - radius) {
-        velocity.y *= -0.95;
-    }
+    if (position.x <= radius || position.x >= 800 - radius) { velocity.x *= -0.85; velocity.y *= 0.85; }
+    if (position.y <= radius || position.y >= 600 - radius) { velocity.y *= -0.85; velocity.x *= 0.85; }
 }
