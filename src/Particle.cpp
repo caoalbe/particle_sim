@@ -30,9 +30,6 @@ void Particle::update_position(float dt) {
     if (position.x > 800 - radius) { position.x = 800 - radius; } 
     if (position.y < radius) { position.y = radius; }
     if (position.y > 600 - radius) { position.y = 600 - radius; }
-
-    sprite.setPosition(position);
-    sprite.move(sf::Vector2f(-radius, -radius));  
 }
 
 void Particle::update_velocity(float dt, sf::Vector2f force) {
