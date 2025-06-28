@@ -6,5 +6,5 @@ class FieldLine {
         sf::Vector2f field;
 
         FieldLine(sf::Vector2f position);
-        void setElectricField(sf::Vector2f electricField);
+        void update_field(sf::Vector2f electricField);
 };

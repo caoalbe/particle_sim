@@ -38,6 +38,6 @@ void Simulator::update(float dt) {
     }
 
     for (FieldLine& field : field_list) {
-        field.setElectricField(compute_field(field.position));
+        field.update_field(compute_field(field.position));
     }
 }
