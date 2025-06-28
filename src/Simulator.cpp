@@ -1,11 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "Simulator.hpp"
 
-const float k_e = 89.875517862000; // N cm^2 / µC^2
+const float k_e = 89.875517862000; // N cm^2 per µC^2
 
-// TODO: Decouple sprites from Particle and FieldLine objects
 Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines) 
-    : particle_list(particles), field_list(field_lines) {}
+    : particle_list(particles), field_list(field_lines), particle_count(particles.size()), field_count(field_lines.size()) {}
 
 sf::Vector2f Simulator::compute_field(sf::Vector2f target) {
     sf::Vector2f field = sf::Vector2f(0.0f, 0.0f);

@@ -7,25 +7,12 @@ const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
 
 Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField, int id) 
     : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
-    
-    if (mass == 0) {
-        // TODO: Manage this error
-    }
+
+    // TODO: Manage this error
+    if (mass == 0) {}
 
     // Determine radius with sigmoid
     radius = RADIUS_LOWER_BOUND + RADIUS_RANGE/(1 + std::exp(-10*mass+5));
-    sprite = sf::CircleShape(radius);
-
-    sf::Color spriteColor;
-    if (charge == 0.0f) {
-        spriteColor = sf::Color(255, 255, 255, 255);
-    } else if (charge < 0) {
-        spriteColor = sf::Color(0,0,255,255);
-    } else {
-        spriteColor = sf::Color(255,0,0,255);
-    }
-    sprite.setFillColor(spriteColor);
-    sprite.setPosition(position);
 }
 
 Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField) 

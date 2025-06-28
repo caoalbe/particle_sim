@@ -2,8 +2,12 @@
 #include "Particle.hpp"
 #include "FieldLine.hpp"
 
+// Represents the world space
 class Simulator {
     public:
+        int particle_count;
+        int field_count;
+
         std::vector<Particle> particle_list;
         std::vector<FieldLine> field_list;
 
