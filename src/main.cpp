@@ -15,9 +15,9 @@ int main() {
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
         // mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(2.0f, -5.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
-        Particle(3.0f, 3.0f, sf::Vector2f(550.0f, 275.0f), sf::Vector2f(0.0f, -5.0f)),
-        Particle(1.0f, 2.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
+        // Particle(2.0f, -5.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
+        // Particle(3.0f, 3.0f, sf::Vector2f(550.0f, 275.0f), sf::Vector2f(0.0f, -5.0f)),
+        // Particle(1.0f, 2.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
 
         // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
         // Particle(1, 100.0f, -500.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
@@ -39,8 +39,14 @@ int main() {
 
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
-    for (int x = 5; x < 800; x+=8) {
-        for (int y = 5; y < 600; y+=8) {
+    for (int x = 0; x < 800; x+=10) {
+        for (int y = 0; y < 600; y+=20) {
+            f_list.push_back(FieldLine(sf::Vector2f(x, y)));
+        }
+    }
+
+    for (int x = 5; x < 800; x+=10) {
+        for (int y = 10; y < 600; y+=20) {
             f_list.push_back(FieldLine(sf::Vector2f(x, y)));
         }
     }
@@ -54,7 +60,7 @@ int main() {
     sf::Vertex line_data[2];
     line_data[0].color = sf::Color::Yellow;
     line_data[1].color = sf::Color::Yellow;
-    const float MAX_FIELD_LENGTH = 15.0f;
+    const float MAX_FIELD_LENGTH = 10.0f;
     const float MAX_FIELD_LENGTH_SQUARED = MAX_FIELD_LENGTH * MAX_FIELD_LENGTH;
 
     // Start the simulation loop
@@ -71,29 +77,27 @@ int main() {
         // Draw graphics
         window.clear();
 
-        // for (int f = 0; f < sim.field_count; f++) {
         for (FieldLine& field_line : sim.field_list) {
-            field_length_squared = field_line.position.x * field_line.position.x + field_line.position.y * field_line.position.y;
+            field_length_squared = field_line.field.x * field_line.field.x + field_line.field.y * field_line.field.y;
 
             line_data[0].position = field_line.position;
             line_data[1].position = field_line.position;
             if (field_length_squared > MAX_FIELD_LENGTH_SQUARED) { 
                 line_data[1].position += field_line.field * MAX_FIELD_LENGTH / std::sqrt(field_length_squared);
             } else {
-                line_data[1].position += field_line.field ;
+                line_data[1].position += field_line.field;
             }
-
 
             window.draw(line_data, 2, sf::PrimitiveType::Lines);
         }
-        for (int p = 0; p < sim.particle_count; p++) {
-            if (sim.particle_list[p].charge == 0.0f) { particle_sprite.setFillColor(sf::Color(255, 255, 255, 255)); }
-            else if (sim.particle_list[p].charge < 0.0f) { particle_sprite.setFillColor(sf::Color(0, 0, 255, 255)); }
+
+        for (Particle& particle : sim.particle_list) {
+            if (particle.charge == 0.0f) { particle_sprite.setFillColor(sf::Color(255, 255, 255, 255)); }
+            else if (particle.charge < 0.0f) { particle_sprite.setFillColor(sf::Color(0, 0, 255, 255)); }
             else { particle_sprite.setFillColor(sf::Color(255, 0, 0, 255)); }
 
-            particle_sprite.setRadius(sim.particle_list[p].radius);
-            particle_sprite.setPosition(sim.particle_list[p].position 
-                - sf::Vector2f(sim.particle_list[p].radius, sim.particle_list[p].radius));
+            particle_sprite.setRadius(particle.radius);
+            particle_sprite.setPosition(particle.position - sf::Vector2f(particle.radius, particle.radius));
             
             window.draw(particle_sprite);
         }
