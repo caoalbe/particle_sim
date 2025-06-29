@@ -20,6 +20,7 @@ set(SOURCES
     src/Particle.cpp
     src/FieldLine.cpp
     src/Simulator.cpp
+    src/Vec2f.cpp
 )
 
 # Add executable
