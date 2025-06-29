@@ -10,18 +10,15 @@ Vec2f Simulator::compute_field(Vec2f target) {
     Vec2f field = Vec2f(0.0f, 0.0f);
     Vec2f distance_vector;
 
-    float distance_squared;
-    float distance;
+    float length_squared;
     float force;
     for (Particle& particle : particle_list) {
         if (particle.position != target) {
             distance_vector = target - particle.position;
-            distance_squared = distance_vector.x * distance_vector.x + distance_vector.y * distance_vector.y;
-            distance = std::sqrt(distance_squared);
-            distance_vector = distance_vector / distance; // distance_vector is normalized
+            length_squared = distance_vector.x * distance_vector.x + distance_vector.y * distance_vector.y;
 
-            force = k_e * particle.charge / distance_squared;
-            field = field + force*distance_vector;
+            force = k_e * particle.charge / length_squared;
+            field = field + force * distance_vector.normalized();
         }
     }
     return field; // newtons per microcoloumb

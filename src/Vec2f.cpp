@@ -45,6 +45,15 @@ bool Vec2f::operator!=(Vec2f other) const {
     return x != other.x || y != other.y;
 }
 
+float Vec2f::length() const {
+    return std::sqrt(x * x + y * y);
+}
+
+Vec2f Vec2f::normalized() const {
+    // TODO: Handle zero vector
+    float length = this->length();
+    return Vec2f(x/length, y/length);
+}
 
 sf::Vector2f Vec2f::convert() {
     return sf::Vector2f(x, y);

@@ -24,6 +24,9 @@ class Vec2f {
         bool operator==(Vec2f other) const;
         bool operator!=(Vec2f other) const;
 
+        float length() const;
+        Vec2f normalized() const;
+
         // Convert to SFML vector
         sf::Vector2f convert();
 };

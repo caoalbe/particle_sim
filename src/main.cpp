@@ -41,13 +41,13 @@ int main() {
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
     for (int x = 0; x < 800; x+=10) {
-        for (int y = 0; y < 600; y+=20) {
+        for (int y = 5; y < 600; y+=20) {
             f_list.push_back(FieldLine(Vec2f(x, y)));
         }
     }
 
     for (int x = 5; x < 800; x+=10) {
-        for (int y = 10; y < 600; y+=20) {
+        for (int y = 15; y < 600; y+=20) {
             f_list.push_back(FieldLine(Vec2f(x, y)));
         }
     }
@@ -56,13 +56,11 @@ int main() {
 
     // Setup sprite data for graphics library
     sf::CircleShape particle_sprite;
-    float field_length_squared;
 
     sf::Vertex line_data[2];
+    const float MAX_FIELD_LENGTH = 10.0f;
     line_data[0].color = sf::Color::Yellow;
     line_data[1].color = sf::Color::Yellow;
-    const float MAX_FIELD_LENGTH = 10.0f;
-    const float MAX_FIELD_LENGTH_SQUARED = MAX_FIELD_LENGTH * MAX_FIELD_LENGTH;
 
     // Start the simulation loop
     while (window.isOpen()) {
@@ -79,12 +77,10 @@ int main() {
         window.clear();
 
         for (FieldLine& field_line : sim.field_list) {
-            field_length_squared = field_line.field.x * field_line.field.x + field_line.field.y * field_line.field.y;
-
             line_data[0].position = field_line.position.convert();
             line_data[1].position = field_line.position.convert();
-            if (field_length_squared > MAX_FIELD_LENGTH_SQUARED) { 
-                line_data[1].position += field_line.field.convert() * MAX_FIELD_LENGTH / std::sqrt(field_length_squared);
+            if (field_line.field.length() > MAX_FIELD_LENGTH) { 
+                line_data[1].position += (field_line.field.normalized() * MAX_FIELD_LENGTH).convert();
             } else {
                 line_data[1].position += field_line.field.convert();
             }
