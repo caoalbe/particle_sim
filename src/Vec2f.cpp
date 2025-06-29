@@ -62,6 +62,6 @@ Vec2f Vec2f::rotated(float angle) const {
     return Vec2f(cos * x - sin * y, sin * x + cos * y);
 }
 
-sf::Vector2f Vec2f::convert() {
+Vec2f::operator sf::Vector2f() const {
     return sf::Vector2f(x, y);
 }

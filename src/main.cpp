@@ -77,12 +77,12 @@ int main() {
         window.clear();
 
         for (FieldLine& field_line : sim.field_list) {
-            line_data[0].position = field_line.position.convert();
-            line_data[1].position = field_line.position.convert();
+            line_data[0].position = static_cast<sf::Vector2f>(field_line.position);
+            line_data[1].position = static_cast<sf::Vector2f>(field_line.position);
             if (field_line.field.length() > MAX_FIELD_LENGTH) { 
-                line_data[1].position += (field_line.field.normalized() * MAX_FIELD_LENGTH).convert();
+                line_data[1].position += static_cast<sf::Vector2f>(field_line.field.normalized() * MAX_FIELD_LENGTH);
             } else {
-                line_data[1].position += field_line.field.convert();
+                line_data[1].position += static_cast<sf::Vector2f>(field_line.field);
             }
 
             window.draw(line_data, 2, sf::PrimitiveType::Lines);
@@ -94,7 +94,7 @@ int main() {
             else { particle_sprite.setFillColor(sf::Color(255, 0, 0, 255)); }
 
             particle_sprite.setRadius(particle.radius);
-            particle_sprite.setPosition((particle.position - Vec2f(particle.radius, particle.radius)).convert());
+            particle_sprite.setPosition(static_cast<sf::Vector2f>(particle.position - Vec2f(particle.radius, particle.radius)));
             
             window.draw(particle_sprite);
         }
