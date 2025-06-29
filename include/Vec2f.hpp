@@ -26,6 +26,7 @@ class Vec2f {
 
         float length() const;
         Vec2f normalized() const;
+        Vec2f rotated(float angle) const; // Rotate clockwise
 
         // Convert to SFML vector
         sf::Vector2f convert();

@@ -55,6 +55,13 @@ Vec2f Vec2f::normalized() const {
     return Vec2f(x/length, y/length);
 }
 
+Vec2f Vec2f::rotated(float angle) const {
+    // Apply rotation matrix
+    float sin = std::sin(angle);
+    float cos = std::cos(angle);
+    return Vec2f(cos * x - sin * y, sin * x + cos * y);
+}
+
 sf::Vector2f Vec2f::convert() {
     return sf::Vector2f(x, y);
 }
