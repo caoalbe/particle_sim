@@ -1,10 +1,11 @@
 #pragma once
+#include "Vec2f.hpp"
 
 class FieldLine {
     public:
-        sf::Vector2f position;
-        sf::Vector2f field;
+        Vec2f position;
+        Vec2f field;
 
-        FieldLine(sf::Vector2f position);
-        void update_field(sf::Vector2f electricField);
+        FieldLine(Vec2f position);
+        void update_field(Vec2f electricField);
 };

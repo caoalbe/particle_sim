@@ -4,6 +4,7 @@
 #include "Particle.hpp"
 #include "FieldLine.hpp"
 #include "Simulator.hpp"
+#include "Vec2f.hpp"
 
 
 int main() {
@@ -31,8 +32,8 @@ int main() {
         // Particle(5, 1.5f, -35.0f, sf::Vector2f(700.0f,100.0f), sf::Vector2f(10.0f, 2.50f)),
 
         // mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(100.0f, 100.0f, sf::Vector2f(100.0f, 300.0f), sf::Vector2f(45.0f, 0.0f), false), // EARTH
-        Particle(0.5f, -10.0f, sf::Vector2f(100.0f - 75.0f, 300.0f), sf::Vector2f(45.0f, 489.559033858f)), // MOON
+        Particle(100.0f, 100.0f, Vec2f(100.0f, 300.0f), Vec2f(45.0f, 0.0f), false), // EARTH
+        Particle(0.5f, -10.0f, Vec2f(100.0f - 75.0f, 300.0f), Vec2f(45.0f, 489.559033858f)), // MOON
 
         // Particle(10.0f, 0.0f, sf::Vector2f(10.0f, 10.0f), sf::Vector2f(0.0f, 0.0f)),
     };
@@ -41,13 +42,13 @@ int main() {
     f_list.reserve(80*60);
     for (int x = 0; x < 800; x+=10) {
         for (int y = 0; y < 600; y+=20) {
-            f_list.push_back(FieldLine(sf::Vector2f(x, y)));
+            f_list.push_back(FieldLine(Vec2f(x, y)));
         }
     }
 
     for (int x = 5; x < 800; x+=10) {
         for (int y = 10; y < 600; y+=20) {
-            f_list.push_back(FieldLine(sf::Vector2f(x, y)));
+            f_list.push_back(FieldLine(Vec2f(x, y)));
         }
     }
 
@@ -80,12 +81,12 @@ int main() {
         for (FieldLine& field_line : sim.field_list) {
             field_length_squared = field_line.field.x * field_line.field.x + field_line.field.y * field_line.field.y;
 
-            line_data[0].position = field_line.position;
-            line_data[1].position = field_line.position;
+            line_data[0].position = field_line.position.convert();
+            line_data[1].position = field_line.position.convert();
             if (field_length_squared > MAX_FIELD_LENGTH_SQUARED) { 
-                line_data[1].position += field_line.field * MAX_FIELD_LENGTH / std::sqrt(field_length_squared);
+                line_data[1].position += field_line.field.convert() * MAX_FIELD_LENGTH / std::sqrt(field_length_squared);
             } else {
-                line_data[1].position += field_line.field;
+                line_data[1].position += field_line.field.convert();
             }
 
             window.draw(line_data, 2, sf::PrimitiveType::Lines);
@@ -97,7 +98,7 @@ int main() {
             else { particle_sprite.setFillColor(sf::Color(255, 0, 0, 255)); }
 
             particle_sprite.setRadius(particle.radius);
-            particle_sprite.setPosition(particle.position - sf::Vector2f(particle.radius, particle.radius));
+            particle_sprite.setPosition((particle.position - Vec2f(particle.radius, particle.radius)).convert());
             
             window.draw(particle_sprite);
         }

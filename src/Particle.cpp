@@ -1,11 +1,11 @@
-#include <SFML/Graphics.hpp>
 #include "Particle.hpp"
+#include "Vec2f.hpp"
 
 const float RADIUS_LOWER_BOUND = 3.0f;
 const float RADIUS_UPPER_BOUND = 10.0f;
 const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
 
-Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField, int id) 
+Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField, int id) 
     : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
 
     // TODO: Manage this error
@@ -15,10 +15,10 @@ Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f
     radius = RADIUS_LOWER_BOUND + RADIUS_RANGE/(1 + std::exp(-10*mass+5));
 }
 
-Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity, bool respondsToField) 
+Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField) 
     : Particle::Particle(mass, charge, position, velocity, respondsToField, -1) {}
 
-Particle::Particle(float mass, float charge, sf::Vector2f position, sf::Vector2f velocity) 
+Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity) 
     : Particle::Particle(mass, charge, position, velocity, true, -1) {}
 
 void Particle::update_position(float dt) {
@@ -32,7 +32,7 @@ void Particle::update_position(float dt) {
     if (position.y > 600 - radius) { position.y = 600 - radius; }
 }
 
-void Particle::update_velocity(float dt, sf::Vector2f force) {
+void Particle::update_velocity(float dt, Vec2f force) {
     // Update velocity from force (Newtons)
     if (respondsToField) {
         velocity = velocity + force*dt/mass*100.0f;

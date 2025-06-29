@@ -1,14 +1,14 @@
-#include <SFML/Graphics.hpp>
 #include "Simulator.hpp"
+#include "Vec2f.hpp"
 
 const float k_e = 89.875517862000; // N cm^2 per µC^2
 
 Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines) 
     : particle_list(particles), field_list(field_lines), particle_count(particles.size()), field_count(field_lines.size()) {}
 
-sf::Vector2f Simulator::compute_field(sf::Vector2f target) {
-    sf::Vector2f field = sf::Vector2f(0.0f, 0.0f);
-    sf::Vector2f distance_vector;
+Vec2f Simulator::compute_field(Vec2f target) {
+    Vec2f field = Vec2f(0.0f, 0.0f);
+    Vec2f distance_vector;
 
     float distance_squared;
     float distance;
