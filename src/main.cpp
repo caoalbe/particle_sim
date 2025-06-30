@@ -89,27 +89,20 @@ int main() {
 
         for (FieldLine& field_line : sim.field_list) {
             if (field_line.field.length() < 1.0f) { continue; } // field is sufficiently small to skip
+            tip_vec = field_line.field.normalized() * 0.45;
 
             line_data[0].position = static_cast<sf::Vector2f>(field_line.position);
-
             if (field_line.field.length() > MAX_FIELD_LENGTH) { 
                 line_data[1].position = static_cast<sf::Vector2f>(
                                             field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
-                line_data[2].position = static_cast<sf::Vector2f>(
-                                            field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
-                line_data[4].position = static_cast<sf::Vector2f>(
-                                            field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
-                tip_vec = field_line.field.normalized() * 0.45 * MAX_FIELD_LENGTH;
+                tip_vec *= MAX_FIELD_LENGTH;
             } else {
                 line_data[1].position = static_cast<sf::Vector2f>(
                                             field_line.position + field_line.field);
-                line_data[2].position = static_cast<sf::Vector2f>(
-                                            field_line.position + field_line.field);
-                line_data[4].position = static_cast<sf::Vector2f>(
-                                            field_line.position + field_line.field);
-                tip_vec = field_line.field.normalized() * 0.45;
             }
+            line_data[2].position = line_data[1].position;
             line_data[3].position = line_data[2].position + static_cast<sf::Vector2f>(tip_vec.rotated(3.14159 - 0.261799));
+            line_data[4].position = line_data[1].position;
             line_data[5].position = line_data[4].position + static_cast<sf::Vector2f>(tip_vec.rotated(3.14159 + 0.261799));
 
             window.draw(line_data, 6, sf::PrimitiveType::Lines);
