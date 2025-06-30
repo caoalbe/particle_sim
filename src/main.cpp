@@ -40,13 +40,13 @@ int main() {
 
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
-    for (int x = 0; x < 800; x+=10) {
+    for (int x = 0; x < 800; x+=20) {
         for (int y = 5; y < 600; y+=20) {
             f_list.push_back(FieldLine(Vec2f(x, y)));
         }
     }
 
-    for (int x = 5; x < 800; x+=10) {
+    for (int x = 10; x < 800; x+=20) {
         for (int y = 15; y < 600; y+=20) {
             f_list.push_back(FieldLine(Vec2f(x, y)));
         }
@@ -57,10 +57,21 @@ int main() {
     // Setup sprite data for graphics library
     sf::CircleShape particle_sprite;
 
-    sf::Vertex line_data[2];
+    sf::Vertex line_data[6];
     const float MAX_FIELD_LENGTH = 10.0f;
     line_data[0].color = sf::Color::Yellow;
     line_data[1].color = sf::Color::Yellow;
+    line_data[2].color = sf::Color::Yellow;
+    line_data[3].color = sf::Color::Yellow;
+    line_data[4].color = sf::Color::Yellow;
+    line_data[5].color = sf::Color::Yellow;
+
+    // sf::Vertex tip[2];
+    // tip[0].color = sf::Color::Yellow;
+    // tip[1].color = sf::Color::Yellow;
+
+
+    Vec2f tip_vec;
 
     // Start the simulation loop
     while (window.isOpen()) {
@@ -77,15 +88,31 @@ int main() {
         window.clear();
 
         for (FieldLine& field_line : sim.field_list) {
-            line_data[0].position = static_cast<sf::Vector2f>(field_line.position);
-            line_data[1].position = static_cast<sf::Vector2f>(field_line.position);
-            if (field_line.field.length() > MAX_FIELD_LENGTH) { 
-                line_data[1].position += static_cast<sf::Vector2f>(field_line.field.normalized() * MAX_FIELD_LENGTH);
-            } else {
-                line_data[1].position += static_cast<sf::Vector2f>(field_line.field);
-            }
+            if (field_line.field.length() < 1.0f) { continue; } // field is sufficiently small to skip
 
-            window.draw(line_data, 2, sf::PrimitiveType::Lines);
+            line_data[0].position = static_cast<sf::Vector2f>(field_line.position);
+
+            if (field_line.field.length() > MAX_FIELD_LENGTH) { 
+                line_data[1].position = static_cast<sf::Vector2f>(
+                                            field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
+                line_data[2].position = static_cast<sf::Vector2f>(
+                                            field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
+                line_data[4].position = static_cast<sf::Vector2f>(
+                                            field_line.position + MAX_FIELD_LENGTH * field_line.field.normalized());
+                tip_vec = field_line.field.normalized() * 0.45 * MAX_FIELD_LENGTH;
+            } else {
+                line_data[1].position = static_cast<sf::Vector2f>(
+                                            field_line.position + field_line.field);
+                line_data[2].position = static_cast<sf::Vector2f>(
+                                            field_line.position + field_line.field);
+                line_data[4].position = static_cast<sf::Vector2f>(
+                                            field_line.position + field_line.field);
+                tip_vec = field_line.field.normalized() * 0.45;
+            }
+            line_data[3].position = line_data[2].position + static_cast<sf::Vector2f>(tip_vec.rotated(3.14159 - 0.261799));
+            line_data[5].position = line_data[4].position + static_cast<sf::Vector2f>(tip_vec.rotated(3.14159 + 0.261799));
+
+            window.draw(line_data, 6, sf::PrimitiveType::Lines);
         }
 
         for (Particle& particle : sim.particle_list) {
