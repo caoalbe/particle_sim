@@ -43,14 +43,9 @@ int main() {
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
     for (int x = 0; x < 800; x+=20) {
-        for (int y = 5; y < 600; y+=20) {
+        for (int y = 0; y < 600; y+=20) {
             f_list.push_back(FieldLine(Vec2f(x, y)));
-        }
-    }
-
-    for (int x = 10; x < 800; x+=20) {
-        for (int y = 15; y < 600; y+=20) {
-            f_list.push_back(FieldLine(Vec2f(x, y)));
+            f_list.push_back(FieldLine(Vec2f(x+10, y+10)));
         }
     }
 
