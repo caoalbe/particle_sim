@@ -32,9 +32,22 @@ Vec2f operator*(float scalar, const Vec2f& vec) {
     return Vec2f(scalar * vec.x, scalar * vec.y);
 }
 
+Vec2f& Vec2f::operator *=(float scalar) {
+    x *= scalar;
+    y *= scalar;
+    return *this;
+}
+
 // TODO: Handle division by zero
 Vec2f Vec2f::operator/(float scalar) const {
     return Vec2f(x / scalar, y / scalar);
+}
+
+// TODO: Handle division by zero
+Vec2f& Vec2f::operator /=(float scalar) {
+    x /= scalar;
+    y /= scalar;
+    return *this;
 }
 
 bool Vec2f::operator==(Vec2f other) const {

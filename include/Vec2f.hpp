@@ -17,9 +17,11 @@ class Vec2f {
 
         Vec2f operator*(float scalar) const;
         friend Vec2f operator*(float scalar, const Vec2f& vec);
+        Vec2f& operator *=(float scalar);
 
         Vec2f operator/(float scalar) const;
         friend Vec2f operator/(float scalar, const Vec2f& vec);
+        Vec2f& operator /=(float scalar);
 
         bool operator==(Vec2f other) const;
         bool operator!=(Vec2f other) const;
