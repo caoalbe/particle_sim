@@ -14,6 +14,6 @@ class Particle {
         Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField, int id);
         Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField);
         Particle(float mass, float charge, Vec2f position, Vec2f velocity);
-        void update_position(float dt);
-        void update_velocity(float dt, Vec2f);
+        void update_position(float dt, int sim_width, int sim_height);
+        void update_velocity(float dt, Vec2f force, int sim_width, int sim_height);
 };

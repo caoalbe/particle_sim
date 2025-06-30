@@ -2,8 +2,9 @@
 #include "Vec2f.hpp"
 
 const float RADIUS_LOWER_BOUND = 3.0f;
-const float RADIUS_UPPER_BOUND = 10.0f;
+const float RADIUS_UPPER_BOUND = 5.0f;
 const float RADIUS_RANGE = RADIUS_UPPER_BOUND - RADIUS_LOWER_BOUND;
+const float BOUNCE_DAMPEN_FACTOR = 0.35;
 
 Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField, int id) 
     : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
@@ -21,24 +22,30 @@ Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity, boo
 Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity) 
     : Particle::Particle(mass, charge, position, velocity, true, -1) {}
 
-void Particle::update_position(float dt) {
+void Particle::update_position(float dt, int sim_width, int sim_height) {
     // Update position from velocity
     position = position + velocity * dt;
 
     // Prevent clipping
     if (position.x < radius) { position.x = radius; }
-    if (position.x > 800 - radius) { position.x = 800 - radius; } 
+    if (position.x > sim_width - radius) { position.x = sim_width - radius; } 
     if (position.y < radius) { position.y = radius; }
-    if (position.y > 600 - radius) { position.y = 600 - radius; }
+    if (position.y > sim_height - radius) { position.y = sim_height - radius; }
 }
 
-void Particle::update_velocity(float dt, Vec2f force) {
+void Particle::update_velocity(float dt, Vec2f force, int sim_width, int sim_height) {
     // Update velocity from force (Newtons)
     if (respondsToField) {
         velocity = velocity + force*dt/mass*100.0f;
     }
 
     // Bounce off walls
-    if (position.x <= radius || position.x >= 800 - radius) { velocity.x *= -0.85; velocity.y *= 0.85; }
-    if (position.y <= radius || position.y >= 600 - radius) { velocity.x *= 0.85; velocity.y *= -0.85; }
+    if (position.x <= radius || position.x >= sim_width - radius) { 
+        velocity *= BOUNCE_DAMPEN_FACTOR; 
+        velocity.x *= -1;
+    }
+    if (position.y <= radius || position.y >= sim_height - radius) { 
+        velocity *= BOUNCE_DAMPEN_FACTOR; 
+        velocity.y *= -1; 
+    }
 }

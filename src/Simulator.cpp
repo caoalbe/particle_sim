@@ -3,8 +3,13 @@
 
 const float k_e = 89.875517862000; // N cm^2 per µC^2
 
+// TODO: Support inserting particles and field lines
+Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines, int width, int height)
+    : particle_list(particles), field_list(field_lines), particle_count(particles.size()), field_count(field_lines.size()), width(width), height(height) {}
+
+
 Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines) 
-    : particle_list(particles), field_list(field_lines), particle_count(particles.size()), field_count(field_lines.size()) {}
+    : particle_list(particles), field_list(field_lines), particle_count(particles.size()), field_count(field_lines.size()), width(800), height(600) {}
 
 Vec2f Simulator::compute_field(Vec2f target) {
     Vec2f field = Vec2f(0.0f, 0.0f);
@@ -27,11 +32,11 @@ Vec2f Simulator::compute_field(Vec2f target) {
 void Simulator::update(float dt) {
     for (Particle& particle : particle_list) {
         // particle.charge * compute_field is Newtons
-        particle.update_velocity(dt, particle.charge * compute_field(particle.position));
+        particle.update_velocity(dt, particle.charge * compute_field(particle.position), width, height);
     }
 
     for (Particle& particle : particle_list) {
-        particle.update_position(dt);
+        particle.update_position(dt, width, height);
     }
 
     for (FieldLine& field : field_list) {
