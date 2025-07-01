@@ -1,7 +1,7 @@
 #include "Simulator.hpp"
 #include "Vec2f.hpp"
 
-const float k_e = 89.875517862000; // N cm^2 per µC^2
+const float k_e = 8987.5517862000; // cN cm^2 per µC^2
 
 // TODO: Support inserting particles and field lines
 Simulator::Simulator(std::vector<Particle> particles, std::vector<FieldLine> field_lines, int width, int height)
@@ -26,12 +26,12 @@ Vec2f Simulator::compute_field(Vec2f target) {
             field = field + force * distance_vector.normalized();
         }
     }
-    return field; // newtons per microcoloumb
+    return field; // centi-newtons per microcoloumb
 }
 
 void Simulator::update(float dt) {
     for (Particle& particle : particle_list) {
-        // particle.charge * compute_field is Newtons
+        // particle.charge * compute_field is centi-Newtons
         particle.update_velocity(dt, particle.charge * compute_field(particle.position), width, height);
     }
 

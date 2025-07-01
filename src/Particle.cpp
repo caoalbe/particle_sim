@@ -34,9 +34,9 @@ void Particle::update_position(float dt, int sim_width, int sim_height) {
 }
 
 void Particle::update_velocity(float dt, Vec2f force, int sim_width, int sim_height) {
-    // Update velocity from force (Newtons)
+    // Update velocity from force (centi-Newtons)
     if (respondsToField) {
-        velocity = velocity + force*dt/mass*100.0f;
+        velocity = velocity + force*dt/mass;
     }
 
     // Bounce off walls

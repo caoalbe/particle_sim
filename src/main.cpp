@@ -69,10 +69,10 @@ int main(int argc, char* argv[]) {
     std::vector<FieldLine> f_list;
     if (!args.ignore_field) {
         f_list.reserve(80*60);
-        for (int x = 0; x < 800; x+=20) {
-            for (int y = 0; y < 600; y+=20) {
+        for (int x = 0; x < 800; x+=40) {
+            for (int y = 0; y < 600; y+=40) {
                 f_list.push_back(FieldLine(Vec2f(x, y)));
-                f_list.push_back(FieldLine(Vec2f(x+10, y+10)));
+                f_list.push_back(FieldLine(Vec2f(x+20, y+20)));
             }
         }
     }
