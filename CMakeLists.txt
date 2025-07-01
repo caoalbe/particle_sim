@@ -21,6 +21,7 @@ set(SOURCES
     src/FieldLine.cpp
     src/Simulator.cpp
     src/Vec2f.cpp
+    src/args.cpp
 )
 
 # Add executable
