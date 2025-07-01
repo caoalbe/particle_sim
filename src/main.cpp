@@ -30,8 +30,8 @@ int main(int argc, char* argv[]) {
         p_list.push_back(Particle(1000000.0f, 100.0f, Vec2f(400.0f, 300.0f), Vec2f(0.0f, 0.0f)));
         p_list.push_back(Particle(0.5f, -10.0f, Vec2f(400.0f - 75.0f, 300.0f), Vec2f(0.0f, 489.559033858f)));
     } else if (args.sim_setup == SimulationSetup::CircularMoving) {
-        p_list.push_back(Particle(1000000.0f, 100.0f, Vec2f(400.0f, 300.0f), Vec2f(15.0f, 0.0f)));
-        p_list.push_back(Particle(0.5f, -10.0f, Vec2f(400.0f - 75.0f, 300.0f), Vec2f(15.0f, 489.559033858f)));
+        p_list.push_back(Particle(1000000.0f, 100.0f, Vec2f(100.0f, 300.0f), Vec2f(35.0f, 0.0f)));
+        p_list.push_back(Particle(0.5f, -10.0f, Vec2f(100.0f - 75.0f, 300.0f), Vec2f(35.0f, 489.559033858f)));
     } else if (args.sim_setup == SimulationSetup::Four) {
         p_list.push_back(Particle(10.0f, -35.0f, Vec2f(400.0f - 150.0f, 300.0f), Vec2f(10.0f, -35.0f)));
         p_list.push_back(Particle(10.0f, -45.0f, Vec2f(400.0f + 150.0f, 300.0f), Vec2f(0.0f, -50.0f)));

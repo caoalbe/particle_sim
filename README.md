@@ -32,9 +32,19 @@ Here are some example simulations you can run
 ```
 $ ./main circular
 $ ./main circular-moving
+```
+![Moving orbit](./readme_media/circular-moving.gif)
+
+```
 $ ./main four
+```
+![Preset of four particles](./readme_media/four.gif)
+
+```
 $ ./main random
 ```
+![Random setup](./readme_media/random.gif)
+
 
 If the electric field is distracting you can add the flag `--ignore-field`
 ```
