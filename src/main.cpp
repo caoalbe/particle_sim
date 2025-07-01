@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <random>
 #include "Particle.hpp"
 #include "FieldLine.hpp"
 #include "Simulator.hpp"
@@ -18,27 +19,45 @@ int main() {
     // Setup conditions of simulator
     std::vector<Particle> p_list = { 
         // mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        // Particle(2.0f, -5.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(2.0f, 2.0f)),
-        // Particle(3.0f, 3.0f, sf::Vector2f(550.0f, 275.0f), sf::Vector2f(0.0f, -5.0f)),
-        // Particle(1.0f, 2.0f, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(-9.0f, 0.0f)),
 
-        // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        // Particle(1, 100.0f, -500.0f, sf::Vector2f(400.0f, 300.0f), sf::Vector2f(5.0f, 5.0f)),
-        // Particle(2, 0.75f, 1.0f, sf::Vector2f(500.0f, 300.0f), sf::Vector2f(0.0f, -15.0f))
+        // Circular motion
+        // Particle(100.0f, 100.0f, Vec2f(100.0f, 300.0f), Vec2f(45.0f, 0.0f), false), // EARTH
+        // Particle(0.5f, -10.0f, Vec2f(100.0f - 75.0f, 300.0f), Vec2f(45.0f, 489.559033858f)), // MOON
 
-        // identifier, mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        // Particle(1, 2.0f, 50.0f, sf::Vector2f(200.0f,400.0f), sf::Vector2f(10.0f, -5.0f)),
-        // Particle(2, 1.0f, -50.0f, sf::Vector2f(500.0f,300.0f), sf::Vector2f(-20.0f, 1.0f)),
-        // Particle(3, 0.4f, 35.0f, sf::Vector2f(100.0f,500.0f), sf::Vector2f(30.0f, 9.0f)),
-        // Particle(4, 1.3f, 40.0f, sf::Vector2f(700.0f,500.0f), sf::Vector2f(-5.0f, -4.50f)),
-        // Particle(5, 1.5f, -35.0f, sf::Vector2f(700.0f,100.0f), sf::Vector2f(10.0f, 2.50f)),
-
-        // mass, charge (microcoloumb), position (cm), velocity (cm/s)
-        Particle(100.0f, 100.0f, Vec2f(100.0f, 300.0f), Vec2f(45.0f, 0.0f), false), // EARTH
-        Particle(0.5f, -10.0f, Vec2f(100.0f - 75.0f, 300.0f), Vec2f(45.0f, 489.559033858f)), // MOON
-
-        // Particle(10.0f, 0.0f, sf::Vector2f(10.0f, 10.0f), sf::Vector2f(0.0f, 0.0f)),
+        // Four particle system
+        // Particle(10.0f, -35.0f, Vec2f(400.0f - 150.0f, 300.0f), Vec2f(10.0f, -35.0f)), // left
+        // Particle(10.0f, -45.0f, Vec2f(400.0f + 150.0f, 300.0f), Vec2f(0.0f, -50.0f)), // right
+        // Particle(5.0f, 25.0f, Vec2f(400.0f, 300.0f), Vec2f(0.0f, 30.0f)),
+        // Particle(15.0f, 45.0f, Vec2f(400.0f, 300.0f+75.0), Vec2f(-15.0f, -5.0f)),
     };
+
+    std::random_device rd;               // Seed source
+    std::mt19937 gen(rd());              // Mersenne Twister engine
+    std::uniform_real_distribution<> dis(0.0, 1.0); // [0.0, 1.0)
+
+    int negative_count = 0;
+    int positive_count = 0;
+    float charge;
+    for (int p = 0; p < 10; p++) {
+        if (p > 0) {
+            charge = dis(gen) * 75;
+            charge -= (float) positive_count / p * 75;
+
+        } else {
+            charge = (float) dis(gen) * 75 - 37.5f;
+        }
+
+        if (charge > 0) { positive_count++; }
+        else if (charge < 0) { negative_count++; }
+
+        p_list.push_back(Particle(
+            dis(gen) * 5,
+            charge,
+            Vec2f(dis(gen) * 300 + 250, dis(gen) * 200 + 200),
+            Vec2f(dis(gen) * 60 - 30, dis(gen) * 60 - 30)
+        ));
+    }
+
 
     std::vector<FieldLine> f_list;
     f_list.reserve(80*60);
@@ -49,7 +68,7 @@ int main() {
         }
     }
 
-    Simulator sim = Simulator(p_list, f_list);
+    Simulator sim = Simulator(p_list, f_list, 800, 600);
 
     // Setup sprite data for graphics library
     sf::CircleShape particle_sprite;
