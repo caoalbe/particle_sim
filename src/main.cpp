@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     std::vector<Particle> p_list;
     p_list.reserve(10);
     if (args.sim_setup == SimulationSetup::Circular) {
-        // mass, charge (microcoloumb), position (cm), velocity (cm/s)
+        // mass (kg), charge (microcoloumb), position (cm), velocity (cm/s)
         p_list.push_back(Particle(1000000.0f, 100.0f, Vec2f(400.0f, 300.0f), Vec2f(0.0f, 0.0f)));
         p_list.push_back(Particle(0.5f, -10.0f, Vec2f(400.0f - 75.0f, 300.0f), Vec2f(0.0f, 489.559033858f)));
     } else if (args.sim_setup == SimulationSetup::CircularMoving) {
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
             else if (charge < 0) { negative_count++; }
 
             p_list.push_back(Particle(
-                dis(gen) * 5,
+                (1.0f - dis(gen)) * 5,
                 charge,
                 Vec2f(dis(gen) * 300 + 250, dis(gen) * 200 + 200),
                 Vec2f(dis(gen) * 60 - 30, dis(gen) * 60 - 30)

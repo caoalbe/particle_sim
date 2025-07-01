@@ -38,13 +38,17 @@ Vec2f& Vec2f::operator *=(float scalar) {
     return *this;
 }
 
-// TODO: Handle division by zero
 Vec2f Vec2f::operator/(float scalar) const {
+    if (scalar == 0.0f) {
+        throw std::invalid_argument("Cannot divide by zero scalar. 43");
+    }
     return Vec2f(x / scalar, y / scalar);
 }
 
-// TODO: Handle division by zero
 Vec2f& Vec2f::operator /=(float scalar) {
+    if (scalar == 0.0f) {
+        throw std::invalid_argument("Cannot divide by zero scalar. 50");
+    }
     x /= scalar;
     y /= scalar;
     return *this;
@@ -63,8 +67,10 @@ float Vec2f::length() const {
 }
 
 Vec2f Vec2f::normalized() const {
-    // TODO: Handle zero vector
     float length = this->length();
+    if (length == 0.0f) {
+        throw std::invalid_argument("Cannot normalize the zero vector. 72");
+    }
     return Vec2f(x/length, y/length);
 }
 

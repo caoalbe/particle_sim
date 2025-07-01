@@ -9,8 +9,9 @@ const float BOUNCE_DAMPEN_FACTOR = 0.35;
 Particle::Particle(float mass, float charge, Vec2f position, Vec2f velocity, bool respondsToField, int id) 
     : id(id), respondsToField(respondsToField), mass(mass), charge(charge), position(position), velocity(velocity) {
 
-    // TODO: Manage this error
-    if (mass == 0) {}
+    if (mass == 0.0f) {
+        throw std::invalid_argument("Cannot have mass of zero.");
+    }
 
     // Determine radius with sigmoid
     radius = RADIUS_LOWER_BOUND + RADIUS_RANGE/(1 + std::exp(-10*mass+5));
